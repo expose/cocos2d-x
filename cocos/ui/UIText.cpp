@@ -38,7 +38,7 @@ Text::Text():
 _touchScaleChangeEnabled(false),
 _normalScaleValueX(1.0f),
 _normalScaleValueY(1.0f),
-_fontName("Thonburi"),
+_fontName("Thonburi.ttf"),
 _fontSize(10.f),
 _onSelectedScaleOffset(0.5),
 _labelRenderer(nullptr),
