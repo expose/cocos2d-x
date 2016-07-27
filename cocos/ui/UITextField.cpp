@@ -290,7 +290,7 @@ _textFieldEventListener(nullptr),
 _textFieldEventSelector(nullptr),
 _eventCallback(nullptr),
 _textFieldRendererAdaptDirty(true),
-_fontName("Thonburi"),
+_fontName("Thonburi.ttf"),
 _fontSize(10),
 _fontType(FontType::SYSTEM)
 {
@@ -355,7 +355,7 @@ void TextField::onEnter()
 
 void TextField::initRenderer()
 {
-    _textFieldRenderer = UICCTextField::create("input words here", "Thonburi", 20);
+    _textFieldRenderer = UICCTextField::create("input words here", "Thonburi.ttf", 20);
     addProtectedChild(_textFieldRenderer, TEXTFIELD_RENDERER_Z, -1);
 }
 
