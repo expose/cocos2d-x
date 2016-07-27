@@ -27,6 +27,9 @@ import android.opengl.GLSurfaceView;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+import android.content.Context;
+import android.util.Log;
+
 public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     // ===========================================================
     // Constants
@@ -46,10 +49,15 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     private int mScreenHeight;
     private boolean mNativeInitCompleted = false;
 
+    private Context mContext;
+    public Capturing mCapturing;
+
     // ===========================================================
     // Constructors
     // ===========================================================
-
+    public Cocos2dxRenderer(Context context) {
+        mContext = context;
+    }
     // ===========================================================
     // Getter & Setter
     // ===========================================================
@@ -72,6 +80,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
         Cocos2dxRenderer.nativeInit(this.mScreenWidth, this.mScreenHeight);
         this.mLastTickInNanoSeconds = System.nanoTime();
         mNativeInitCompleted = true;
+        mCapturing = new Capturing(mContext, mScreenWidth, mScreenHeight);
     }
 
     @Override
@@ -86,11 +95,18 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
          * since onDrawFrame() was called by system 60 times per second by default.
          */
         if (sAnimationInterval <= 1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND) {
+          if (mCapturing.isRunning()) {
+              mCapturing.beginCaptureFrame();
+            }
             Cocos2dxRenderer.nativeRender();
+            if (mCapturing.isRunning())
+            {
+              mCapturing.endCaptureFrame();
+            }
         } else {
             final long now = System.nanoTime();
             final long interval = now - this.mLastTickInNanoSeconds;
-        
+
             if (interval < Cocos2dxRenderer.sAnimationInterval) {
                 try {
                     Thread.sleep((Cocos2dxRenderer.sAnimationInterval - interval) / Cocos2dxRenderer.NANOSECONDSPERMICROSECOND);
@@ -101,9 +117,14 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
              * Render time MUST be counted in, or the FPS will slower than appointed.
             */
             this.mLastTickInNanoSeconds = System.nanoTime();
+            if (mCapturing.isRunning()) {
+                 mCapturing.beginCaptureFrame();
+             }
             Cocos2dxRenderer.nativeRender();
+            if (mCapturing.isRunning())
+                mCapturing.endCaptureFrame();
+           }
         }
-    }
 
     // ===========================================================
     // Methods
@@ -146,7 +167,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
 
     public void handleOnPause() {
         /**
-         * onPause may be invoked before onSurfaceCreated, 
+         * onPause may be invoked before onSurfaceCreated,
          * and engine will be initialized correctly after
          * onSurfaceCreated is invoked. Can not invoke any
          * native method before onSurfaceCreated is invoked

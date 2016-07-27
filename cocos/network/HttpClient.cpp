@@ -30,6 +30,9 @@
 #include <curl/curl.h>
 #include "base/CCDirector.h"
 #include "platform/CCFileUtils.h"
+#include <string>
+#include <sstream>
+#include <vector>
 
 NS_CC_BEGIN
 
@@ -74,6 +77,8 @@ static int processGetTask(HttpClient* client, HttpRequest* request, write_callba
 static int processPostTask(HttpClient* client, HttpRequest* request, write_callback callback, void *stream, long *errorCode, write_callback headerCallback, void *headerStream, char* errorBuffer);
 static int processPutTask(HttpClient* client,  HttpRequest* request, write_callback callback, void *stream, long *errorCode, write_callback headerCallback, void *headerStream, char* errorBuffer);
 static int processDeleteTask(HttpClient* client,  HttpRequest* request, write_callback callback, void *stream, long *errorCode, write_callback headerCallback, void *headerStream, char* errorBuffer);
+static int processPostFileTask(HttpClient* client,  HttpRequest *request, write_callback callback, void *stream, long *errorCode, write_callback headerCallback, void *headerStream, char *errorBuffer);
+
 // int processDownloadTask(HttpRequest *task, write_callback callback, void *stream, int32_t *errorCode);
 
 // Worker thread
@@ -337,6 +342,59 @@ static int processDeleteTask(HttpClient* client, HttpRequest* request, write_cal
             && curl.perform(responseCode);
     return ok ? 0 : 1;
 }
+//Process PostFile Request
+static int processPostFileTask(HttpClient* client, HttpRequest *request, write_callback callback, void *stream, long *responseCode, write_callback headerCallback, void *headerStream, char *errorBuffer)
+{
+    struct curl_httppost *post1;
+    struct curl_httppost *postend;
+    
+    post1 = NULL;
+    postend = NULL;
+    curl_formadd(&post1, &postend,
+                 CURLFORM_COPYNAME, "videoFile",
+                 CURLFORM_FILE, request->getVideoFilePath().c_str(),
+                 CURLFORM_CONTENTTYPE, "application/octet-stream",
+                 CURLFORM_END);
+
+    curl_formadd(&post1, &postend,
+                 CURLFORM_COPYNAME, "videoPreview",
+                 CURLFORM_FILE, request->getPreviewFilePath().c_str(),
+                 CURLFORM_CONTENTTYPE, "application/octet-stream",
+                 CURLFORM_END);
+    char* s;
+    char param[256];
+    char value[256];
+    s = strtok (request->getRequestData() ,"=&");
+    
+    CCLOG("s: %s", s);
+
+    int i = 0;
+    while (s != NULL)
+    {
+        if(i % 2 == 0) {
+            sprintf(param, "%s", s);
+            param[strlen(param)] = '\0';
+        }
+        else {
+            sprintf(value, "%s", s);
+            value[strlen(value)] = '\0';
+            curl_formadd(&post1, &postend,
+                         CURLFORM_COPYNAME, param,
+                         CURLFORM_COPYCONTENTS, value,
+                         CURLFORM_END);
+        }
+        s = strtok (NULL, "=&");
+        i++;
+    }
+   CURLRaii curl;
+    bool ok = curl.init(client, request, callback, stream, headerCallback, headerStream, errorBuffer)
+    && curl.setOption(CURLOPT_NOPROGRESS, 1L)
+    && curl.setOption(CURLOPT_MAXREDIRS, 50L)
+    && curl.setOption(CURLOPT_TCP_KEEPALIVE, 1L)
+    && curl.setOption(CURLOPT_HTTPPOST, post1)
+    && curl.perform(responseCode);
+    return ok ? 0 : 1;
+}
 
 // HttpClient implementation
 HttpClient* HttpClient::getInstance()
@@ -556,6 +614,15 @@ void HttpClient::processResponse(HttpResponse* response, char* responseMessage)
 			response->getResponseHeader(),
 			responseMessage);
 		break;
+    case HttpRequest::Type::POSTFILE: // HTTP POST
+        retValue = processPostFileTask(this, request,
+                                            writeData,
+                                           response->getResponseData(),
+                                           &responseCode,
+                                           writeHeaderData,
+                                           response->getResponseHeader(),
+                                           responseMessage);
+            break;
 
 	default:
 		CCASSERT(true, "CCHttpClient: unknown request type, only GET and POSt are supported");

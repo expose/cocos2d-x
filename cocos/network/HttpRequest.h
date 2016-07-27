@@ -73,6 +73,7 @@ public:
         POST,
         PUT,
         DELETE,
+        POSTFILE,
         UNKNOWN,
     };
 
@@ -338,6 +339,24 @@ public:
     {
         return _headers;
     }
+    inline std::string getVideoFilePath()
+    {
+        return _pVideoFilePath;
+    }
+    
+    void setVideoFilePath(std::string filepath)
+    {
+        _pVideoFilePath = filepath;
+    }
+    inline std::string getPreviewFilePath()
+    {
+        return _pPreviewFilePath;
+    }
+    
+    void setPreviewFilePath(std::string filepath)
+    {
+        _pPreviewFilePath = filepath;
+    }
 
 private:
     inline void doSetResponseCallback(Ref* pTarget, SEL_HttpResponse pSelector)
@@ -366,6 +385,8 @@ protected:
     ccHttpRequestCallback       _pCallback;      /// C++11 style callbacks
     void*                       _pUserData;      /// You can add your customed data here
     std::vector<std::string>    _headers;              /// custom http headers
+    std::string                 _pVideoFilePath; // path of video file
+    std::string                 _pPreviewFilePath; // path of preview file
 };
 
 }
