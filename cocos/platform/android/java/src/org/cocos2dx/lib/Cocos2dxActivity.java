@@ -60,10 +60,10 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     // ===========================================================
     // Fields
     // ===========================================================
-    
+
     private Cocos2dxGLSurfaceView mGLSurfaceView = null;
     private int[] mGLContextAttrs = null;
-    private Cocos2dxHandler mHandler = null;   
+    private Cocos2dxHandler mHandler = null;
     private static Cocos2dxActivity sContext = null;
     private Cocos2dxVideoHelper mVideoHelper = null;
     private Cocos2dxWebViewHelper mWebViewHelper = null;
@@ -163,7 +163,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         }
 
         @Override
-        public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) 
+        public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display)
         {
             int[] EGLattribs = {
                     EGL10.EGL_RED_SIZE, configAttribs[0],
@@ -225,11 +225,11 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         }
 
     }
-    
+
     public static Context getContext() {
         return sContext;
     }
-    
+
     public void setKeepScreenOn(boolean value) {
         final boolean newValue = value;
         runOnUiThread(new Runnable() {
@@ -239,7 +239,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
             }
         });
     }
-    
+
     protected void onLoadNativeLibraries() {
         try {
             ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
@@ -250,7 +250,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
             e.printStackTrace();
         }
     }
-    
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -265,16 +265,16 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
         sContext = this;
         this.mHandler = new Cocos2dxHandler(this);
-        
+
         Cocos2dxHelper.init(this);
-        
+
         this.mGLContextAttrs = getGLContextAttrs();
         this.init();
 
         if (mVideoHelper == null) {
             mVideoHelper = new Cocos2dxVideoHelper(this, mFrameLayout);
         }
-        
+
         if(mWebViewHelper == null){
             mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
         }
@@ -291,7 +291,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
     //native method,call GLViewImpl::getGLContextAttrs() to get the OpenGL ES context attributions
     private static native int[] getGLContextAttrs();
-    
+
     // ===========================================================
     // Getter & Setter
     // ===========================================================
@@ -307,16 +307,16 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         this.hideVirtualButton();
        	resumeIfHasFocus();
     }
-    
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
     	Log.d(TAG, "onWindowFocusChanged() hasFocus=" + hasFocus);
         super.onWindowFocusChanged(hasFocus);
-        
+
         this.hasFocus = hasFocus;
         resumeIfHasFocus();
     }
-    
+
     private void resumeIfHasFocus() {
         if(hasFocus) {
             this.hideVirtualButton();
@@ -332,7 +332,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         Cocos2dxHelper.onPause();
         mGLSurfaceView.onPause();
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -345,12 +345,12 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         msg.obj = new Cocos2dxHandler.DialogMessage(pTitle, pMessage);
         this.mHandler.sendMessage(msg);
     }
-    
+
     @Override
     public void runOnGLThread(final Runnable pRunnable) {
         this.mGLSurfaceView.queueEvent(pRunnable);
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -367,7 +367,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     // Methods
     // ===========================================================
     public void init() {
-        
+
         // FrameLayout
         ViewGroup.LayoutParams framelayout_params =
             new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -397,14 +397,14 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         if (isAndroidEmulator())
            this.mGLSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 
-        this.mGLSurfaceView.setCocos2dxRenderer(new Cocos2dxRenderer());
+        this.mGLSurfaceView.setCocos2dxRenderer(new Cocos2dxRenderer(this));
         this.mGLSurfaceView.setCocos2dxEditText(edittext);
 
         // Set framelayout as the content view
         setContentView(mFrameLayout);
     }
 
-    
+
     public Cocos2dxGLSurfaceView onCreateView() {
         Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
         //this line is need on some device if we specify an alpha bits
