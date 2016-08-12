@@ -29,6 +29,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.util.Log;
+import org.m4m.android.EglContextSwitcher;
 
 public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     // ===========================================================
@@ -50,6 +51,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     private boolean mNativeInitCompleted = false;
 
     private Context mContext;
+    private EglContextSwitcher contextSwitcher;
     public Capturing mCapturing;
 
     // ===========================================================
@@ -80,7 +82,9 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
         Cocos2dxRenderer.nativeInit(this.mScreenWidth, this.mScreenHeight);
         this.mLastTickInNanoSeconds = System.nanoTime();
         mNativeInitCompleted = true;
-        mCapturing = new Capturing(mContext, mScreenWidth, mScreenHeight);
+        //mCapturing = new Capturing(mContext, mScreenWidth, mScreenHeight);
+        contextSwitcher = new EglContextSwitcher();
+        contextSwitcher.init(this.mScreenWidth, this.mScreenHeight);
     }
 
     @Override
@@ -94,15 +98,34 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
          * No need to use algorithm in default(60 FPS) situation,
          * since onDrawFrame() was called by system 60 times per second by default.
          */
+        GameRecorder recorder = GameRecorder.getInstance();
         if (sAnimationInterval <= 1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND) {
-          if (mCapturing.isRunning()) {
+          /*if (mCapturing.isRunning()) {
               mCapturing.beginCaptureFrame();
+            }*/
+            if (recorder.isRecording()) {
+                Log.w("Recorder","RECORDING!!!!");
+                contextSwitcher.saveEglState();
+                // switch to recorder state
+                recorder.makeCurrent();
+                //recorder.getProjectionMatrix(mProjectionMatrix);
+                recorder.setViewport();
+
+                // render everything again
+                Cocos2dxRenderer.nativeRender();
+                recorder.swapBuffers();
+
+                contextSwitcher.restoreEglState();
             }
-            Cocos2dxRenderer.nativeRender();
-            if (mCapturing.isRunning())
+            else
+            {
+                Log.w("Recorder","NOT RECORDING!!!!");
+            }
+            //Cocos2dxRenderer.nativeRender();
+            /*if (mCapturing.isRunning())
             {
               mCapturing.endCaptureFrame();
-            }
+            }*/
         } else {
             final long now = System.nanoTime();
             final long interval = now - this.mLastTickInNanoSeconds;
@@ -117,12 +140,35 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
              * Render time MUST be counted in, or the FPS will slower than appointed.
             */
             this.mLastTickInNanoSeconds = System.nanoTime();
-            if (mCapturing.isRunning()) {
+            /*if (mCapturing.isRunning()) {
                  mCapturing.beginCaptureFrame();
-             }
-            Cocos2dxRenderer.nativeRender();
-            if (mCapturing.isRunning())
-                mCapturing.endCaptureFrame();
+             }*/
+            try {
+                recorder.wait(150);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (recorder.isRecording()) {
+                Log.w("Recorder","RECORDING E!!!!");
+                contextSwitcher.saveEglState();
+                // switch to recorder state
+                recorder.makeCurrent();
+                //recorder.getProjectionMatrix(mProjectionMatrix);
+                recorder.setViewport();
+
+                // render everything again
+                Cocos2dxRenderer.nativeRender();
+                recorder.swapBuffers();
+
+                contextSwitcher.restoreEglState();
+            }
+            else
+            {
+                Cocos2dxRenderer.nativeRender();
+            }
+            //Cocos2dxRenderer.nativeRender();
+            /*if (mCapturing.isRunning())
+                mCapturing.endCaptureFrame();*/
            }
         }
 

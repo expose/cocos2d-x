@@ -16,6 +16,8 @@
 
 package org.m4m;
 
+import android.util.Log;
+
 import org.m4m.domain.MediaFormat;
 import org.m4m.domain.Resolution;
 
@@ -94,6 +96,7 @@ public abstract class VideoFormat extends MediaFormat {
         if (width * height * 30 * 2 * 0.00007 < bitRate) {
             bitRate = (int) (width * height * 30 * 2 * 0.00007);
         }
+        Log.d("BITRATE","bitrate: "+bitRate);
         setInteger(KEY_BIT_RATE, bitRate * 1024);
     }
 

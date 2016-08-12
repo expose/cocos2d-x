@@ -132,6 +132,8 @@ public class Capturing
 
     public Capturing(Context context, int width, int height)
     {
+        float arenaRatio = height/width;
+
         videoCapture = new VideoCapture(context, progressListener);
 
         frameBuffer = new FrameBuffer(EglUtil.getInstance());
@@ -164,7 +166,16 @@ public class Capturing
         encodeThread = new EncodeThread(sharedContext, width, height);
 
     }
+    public void initCapturing(int width, int height,int screenWidth,int screenHeight, int frameRate, int bitRate)
+    {
+        videoFrameRate = frameRate;
+        VideoCapture.init(width, height, frameRate, bitRate);
+        videoWidth = width;
+        videoHeight = height;
 
+        encodeThread = new EncodeThread(sharedContext, width, height);
+
+    }
     public void startCapturing(final String videoPath)
     {
         if (videoCapture == null) {
