@@ -81,7 +81,17 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
         Cocos2dxRenderer.nativeInit(this.mScreenWidth, this.mScreenHeight);
         this.mLastTickInNanoSeconds = System.nanoTime();
         mNativeInitCompleted = true;
-        mCapturing = new Capturing(mContext, mScreenWidth, mScreenHeight);
+        int width;
+        int height;
+        if(mScreenWidth > 1920)
+            width = 1280;
+        else
+            width = mScreenWidth;
+        if(mScreenHeight > 1080)
+            height = 720;
+        else
+            height = mScreenHeight;
+        mCapturing = new Capturing(mContext, width, height);
     }
 
     @Override
@@ -96,13 +106,14 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
          * since onDrawFrame() was called by system 60 times per second by default.
          */
         if (sAnimationInterval <= 1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND) {
-          if (mCapturing.isRunning()) {
-              mCapturing.beginCaptureFrame();
+            if (mCapturing.isRunning()) {
+                mCapturing.beginCaptureFrame();
+                Cocos2dxRenderer.nativeRender();
+                mCapturing.endCaptureFrame();
             }
-            Cocos2dxRenderer.nativeRender();
-            if (mCapturing.isRunning())
+            else
             {
-              mCapturing.endCaptureFrame();
+                Cocos2dxRenderer.nativeRender();
             }
         } else {
             final long now = System.nanoTime();
@@ -119,13 +130,16 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
             */
             this.mLastTickInNanoSeconds = System.nanoTime();
             if (mCapturing.isRunning()) {
-                 mCapturing.beginCaptureFrame();
-             }
-            Cocos2dxRenderer.nativeRender();
-            if (mCapturing.isRunning())
+                mCapturing.beginCaptureFrame();
+                Cocos2dxRenderer.nativeRender();
                 mCapturing.endCaptureFrame();
-           }
+            }
+            else
+            {
+                Cocos2dxRenderer.nativeRender();
+            }
         }
+    }
 
     // ===========================================================
     // Methods

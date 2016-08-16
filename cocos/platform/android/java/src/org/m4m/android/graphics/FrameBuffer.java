@@ -148,6 +148,7 @@ public class FrameBuffer implements IFrameBuffer {
 
     @Override
     public void bind() {
+        Log.d("BIND","width:"+resolution.width()+" height:"+resolution.height());
         GLES20.glViewport(0,0,resolution.width(), resolution.height());
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, framebuffer);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
