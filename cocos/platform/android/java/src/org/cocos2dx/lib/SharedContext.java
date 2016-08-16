@@ -30,6 +30,7 @@ public class SharedContext
 		egl = (EGL10)EGLContext.getEGL();
 
 		eglDisplay = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
+
 		if (eglDisplay == EGL10.EGL_NO_DISPLAY) {
 			Log.e(TAG, "--- eglGetDisplay failed: " + GLUtils.getEGLErrorString(egl.eglGetError()));
 		}
