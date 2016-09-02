@@ -129,6 +129,20 @@ public class Capturing
             newFrameIsAvailable = true;
         }
     }
+    public Capturing(Context context, int width, int height,int screenWidth, int screenHeight)
+    {
+        videoCapture = new VideoCapture(context, progressListener);
+
+        frameBuffer = new FrameBuffer(EglUtil.getInstance());
+        frameBuffer.setResolution(new Resolution(screenWidth, screenHeight));
+        this.width = width;
+        this.height = height;
+        Log.d(TAG, "constructor " + context);
+        texture = new FullFrameTexture();
+        sharedContext = new SharedContext();
+        instance = this;
+    }
+
 
     public Capturing(Context context, int width, int height)
     {

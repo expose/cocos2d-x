@@ -33,9 +33,9 @@ public class VideoFormatAndroid extends VideoFormat {
         if (width > 1280 || height > 1280) {
             if (width > height) {
                 width = 1280;
-                height = 720;
+                height = 800;
             } else {
-                width = 720;
+                width = 800;
                 height = 1280;
             }
         }
