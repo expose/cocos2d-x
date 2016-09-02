@@ -88,7 +88,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
         else
             width = mScreenWidth;
         if(mScreenHeight > 1080)
-            height = 720;
+            height = 800;
         else
             height = mScreenHeight;
         mCapturing = new Capturing(mContext, width, height);
