@@ -80,7 +80,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
         Log.d("SIZE", "SIZE::::::: " + Integer.toString(this.mScreenWidth) + "x" + Integer.toString(this.mScreenHeight));
         Cocos2dxRenderer.nativeInit(this.mScreenWidth, this.mScreenHeight);
         this.mLastTickInNanoSeconds = System.nanoTime();
-        mNativeInigtCompleted = true;
+        mNativeInitCompleted = true;
         int width;
         int height;
         if(mScreenWidth > 1920)
