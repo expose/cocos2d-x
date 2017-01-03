@@ -112,6 +112,7 @@ public:
     id getCocoaWindow() override { return glfwGetCocoaWindow(_mainWindow); }
 #endif // #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 
+    void updateFrameSize();
 protected:
     GLViewImpl(bool initglfw = true);
     virtual ~GLViewImpl();
@@ -122,7 +123,7 @@ protected:
 
     bool initGlew();
 
-    void updateFrameSize();
+    
 
     // GLFW callbacks
     void onGLFWError(int errorID, const char* errorDesc);

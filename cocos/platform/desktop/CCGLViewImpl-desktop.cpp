@@ -565,15 +565,18 @@ void GLViewImpl::updateFrameSize()
         {
             if (_isRetinaEnabled)
             {
-                _retinaFactor = 1;
+                _retinaFactor = 2;
+                glfwSetWindowSize(_mainWindow, _screenSize.width/2 * _retinaFactor * _frameZoomFactor, _screenSize.height/2 * _retinaFactor * _frameZoomFactor);
+                _isInRetinaMonitor=true;
             }
             else
             {
-                _retinaFactor = 2;
-            }
-            glfwSetWindowSize(_mainWindow, _screenSize.width/2 * _retinaFactor * _frameZoomFactor, _screenSize.height/2 * _retinaFactor * _frameZoomFactor);
+                _retinaFactor = 1;
+                glfwSetWindowSize(_mainWindow, _screenSize.width * _retinaFactor * _frameZoomFactor, _screenSize.height * _retinaFactor * _frameZoomFactor);
+                _isInRetinaMonitor=false;
 
-            _isInRetinaMonitor = true;
+            }
+            //_isInRetinaMonitor = true;
         }
         else
         {
