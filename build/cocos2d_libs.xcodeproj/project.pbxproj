@@ -1266,10 +1266,14 @@
 		29DA08F61C63351600F4052B /* UIEditBoxImpl-winrt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DA08F21C63351600F4052B /* UIEditBoxImpl-winrt.cpp */; };
 		29DA08F71C63351600F4052B /* UIEditBoxImpl-winrt.h in Headers */ = {isa = PBXBuildFile; fileRef = 29DA08F31C63351600F4052B /* UIEditBoxImpl-winrt.h */; };
 <<<<<<< HEAD
+<<<<<<< HEAD
 		354B10381D784F9B008E4737 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507003181B69735200E83DDD /* HttpClient.cpp */; };
 =======
 		354B103A1D79B63E008E4737 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507003181B69735200E83DDD /* HttpClient.cpp */; };
 >>>>>>> Add HttpClient.cpp to pbxproj file
+=======
+		354B103A1D79B63E008E4737 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507003181B69735200E83DDD /* HttpClient.cpp */; };
+>>>>>>> 9c3e4389f9842683ebf89c7df0d60ae13fc5a8fe
 		382383EE1A258FA7002C4610 /* flatbuffers.h in Headers */ = {isa = PBXBuildFile; fileRef = 382383E41A258FA7002C4610 /* flatbuffers.h */; };
 		382383EF1A258FA7002C4610 /* flatbuffers.h in Headers */ = {isa = PBXBuildFile; fileRef = 382383E41A258FA7002C4610 /* flatbuffers.h */; };
 		382383F01A258FA7002C4610 /* flatc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 382383E51A258FA7002C4610 /* flatc.cpp */; };
@@ -16203,10 +16207,14 @@
 			buildActionMask = 2147483647;
 			files = (
 <<<<<<< HEAD
+<<<<<<< HEAD
 				354B10381D784F9B008E4737 /* HttpClient.cpp in Sources */,
 =======
 				354B103A1D79B63E008E4737 /* HttpClient.cpp in Sources */,
 >>>>>>> Add HttpClient.cpp to pbxproj file
+=======
+				354B103A1D79B63E008E4737 /* HttpClient.cpp in Sources */,
+>>>>>>> 9c3e4389f9842683ebf89c7df0d60ae13fc5a8fe
 				C5F5161F1C822D6D0013B695 /* UITabControl.cpp in Sources */,
 				C5F5161D1C822D400013B695 /* TabControlReader.cpp in Sources */,
 				D0FD03541A3B51AA00825BB5 /* CCAllocatorGlobalNewDelete.cpp in Sources */,
